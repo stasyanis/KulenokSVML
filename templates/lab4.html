@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{{ super() }}
+<p>Определение Категории качества вина методом дерева решений
+<form action="/dec_tree" method="POST">
+    <p><input type="text" class="form_text" name="list1">Алкоголь</p>
+    <p><input name="list2" class="form_text" type="text">Яблочная кислота</p>
+    <p><input name="list3" class="form_text" type="text">Пепел</p>
+    <p><input name="list4" class="form_text" type="text">Щелочность золы</p>
+    <p><input name="list5" class="form_text" type="text">Магний</p>
+    <p><input name="list6" class="form_text" type="text">Общее количество фенолов</p>
+    <p><input name="list7" class="form_text" type="text">Флавоноиды</p>
+    <p><input name="list8" class="form_text" type="text">Нефлаваноидные фенолы</p>
+    <p><input name="list9" class="form_text" type="text">Проантоцианы</p>
+    <p><input name="list10" class="form_text" type="text">Интенсивность цвета</p>
+    <p><input name="list11" class="form_text" type="text">Оттенок</p>
+    <p><input name="list12" class="form_text" type="text">OD280/OD315 разбавленных вин</p>
+    <p><input name="list13" class="form_text" type="text">Пролин</p>
+    <input type="submit" class="form_btn" value="Узнать категорию вина">
+    <h1>{{class_model}}</h1>
+    </p>
+</form>
+
+{% endblock %}

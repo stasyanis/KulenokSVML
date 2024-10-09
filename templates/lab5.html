@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{{ super() }}
+<p>Определение наличия диабета
+<form action="/neouron" method="POST">
+    <p>
+        <select class="form_text" name="list1">
+            <option value="0" selected>Женский</option>
+            <option value="1">Мужской</option>
+        </select>
+        Пол
+    </p>
+    <p><input name="list2" class="form_text" type="text">Возраст</p>
+    <p>
+        <select class="form_text" name="list3">
+            <option value="0" selected>Нет</option>
+            <option value="1">Да</option>
+        </select>
+        Гипертония
+    </p>
+    <p>
+        <select class="form_text" name="list4">
+            <option value="0" selected>Имеются</option>
+            <option value="1">Нет</option>
+        </select>
+        Болезни сердца
+    </p>
+    <p>
+        <select class="form_text" name="list5">
+            <option value="0" selected>Нет информации</option>
+            <option value="1">Курящий</option>
+            <option value="2">В завязке</option>
+            <option value="3">Бросивший</option>
+            <option value="4">Никогда не курил</option>
+        </select>
+        Курение
+    </p>
+    <p><input name="list6" class="form_text" type="text">Индекс Массы Тела</p>
+    <p><input name="list7" class="form_text" type="text">Уровень гликированного гемоглобина</p>
+    <p><input name="list8" class="form_text" type="text">Уровень Глюкозы в крови</p>
+
+    <input type="submit" class="form_btn" value="Узнать Результат">
+    <h1>{{class_model}}</h1>
+    </p>
+</form>
+
+{% endblock %}

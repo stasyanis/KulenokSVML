@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+ 
+{% block content %}
+{{ super() }}
+<p>Предсказание Роста ребёнка методом Логистической регрессии
+<form action="/log_reg" method="POST">
+    <p><input type="text" class="form_text" name="list1"> Введите возраст(мес.)</p>
+    <p>
+        <select class="form_text" name="list2">
+            <option value="0" selected>Женский</option>
+            <option value="1">Мужской</option>
+        </select>
+        Выберите пол
+    </p>
+    <p><input name="list3" class="form_text" type="text"> Введите вес</p>
+    <input type="submit" class="form_btn" value="Узнать Рост">
+    <h1>{{class_model}}</h1>
+    </p>
+</form>
+
+{% endblock %}

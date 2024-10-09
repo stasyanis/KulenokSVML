@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+ 
+{% block content %}
+{{ super() }}
+<p>Предсказание размера ноги по параметрам человека методом Линейной регрессии
+<form action="/lin_reg" method="POST">
+    <p><input type="text" class="form_text" name="list1"> Введите рост</p>
+    <p><input name="list2" class="form_text" type="text"> Введите вес</p>
+    <p>
+        <select class="form_text" name="list3">
+            <option value="0" selected>Женский</option>
+            <option value="1">Мужской</option>
+        </select>
+        Выберите пол
+    </p>
+    <input type="submit" class="form_btn" value="Узнать Размер ноги">
+    <h1>{{class_model}}</h1>
+    </p>
+</form>
+
+{% endblock %}
