@@ -1,16 +1,28 @@
 import pickle
 import math
 from enum import auto, Enum
+from werkzeug.utils import secure_filename
+import os
 
 import numpy as np
+import keras
+from keras import ops
+
 import pandas as pd
 from flask import Flask, render_template, url_for, request, jsonify
 from sklearn.metrics import mean_squared_error, mean_absolute_percentage_error, mean_absolute_error, r2_score, \
     accuracy_score, precision_score, recall_score, f1_score
 
-from model.test_split import get_shoe_size_set, get_gender_set, get_heights_test_set
 from model.use_neo import new_neuron
 from model.neo import SingleNeuron
+
+from flask import Flask, request, render_template, redirect, url_for
+import os
+from PIL import Image
+import numpy as np
+import tensorflow as tf
+from tensorflow.keras.preprocessing import image
+
 
 app = Flask(__name__)
 
@@ -18,7 +30,8 @@ menu = [{"name": "Лаба 1", "url": "lin_reg"},
         {"name": "Лаба 2", "url": "log_reg"},
         {"name": "Лаба 3", "url": "knn"},
         {"name": "Лаба 4", "url": "dec_tree"},
-        {"name": "Лаба 5", "url": "neouron"}]
+        {"name": "Лаба 5", "url": "neouron"},
+        {"name": "Лаба 6", "url": "pickneuron"}]
 
 heights = ["нормален", "немного низкорослый", "карлик", "высокий"]
 
@@ -26,13 +39,26 @@ genders = ["женщина", "мужчина"]
 
 wines = ["Выдающееся", "Качественное", "Местное"]
 
+classes = ["футболка", "брюки", "кофта", "платье", "пальто", "сандали", "рубашка", "кроссовок", "сумка", "ботинок"]
 
+UPLOAD_FOLDER = 'uploads'
+app.config['uploads'] = UPLOAD_FOLDER
+sequ_model = tf.keras.models.load_model('model/Sequential_model.keras')
 
 loaded_model_linear_regression = pickle.load(open('model/legs_model_l1', 'rb'))
 loaded_model_logistic_regression = pickle.load(open('model/baby_pickle_file_l2', 'rb'))
 loaded_model_knn = pickle.load(open('model/model_genbylegs_l3', 'rb'))
 loaded_model_decision_tree = pickle.load(open('model/wine_model_l4', 'rb'))
+load_clothes = keras.models.load_model("model/classification_model.h5")
 
+
+def preproces_image(image_path):
+    img = image.load_img(image_path, target_size=(28, 28), color_mode="grayscale")
+    img_array = image.img_to_array(img)
+    img_array = img_array / 255.0
+    img_array = 1 - img_array
+    img_array = np.expand_dims(img_array, axis=0)
+    return img_array
 
 @app.route("/")
 def index():
@@ -121,6 +147,44 @@ def f_lab5():
 
         return render_template('lab5.html', title="Первый нейрон диабет", menu=menu,
                                class_model="Ваш диагноз: " + str(*np.where(predictions >= 0.5, 'Диабета нет', 'Диабет есть')))
+
+@app.route('/pickneuron', methods=['GET', 'POST'])
+def lab6():
+    if request.method == 'GET':
+        return render_template('lab6.html', title="Cвёрт сеть", menu=menu, class_model='')
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            return 'No file part'
+        file = request.files['file']
+        if file.filename == '':
+            return 'No selected file'
+
+        file_path = os.path.join(app.config['uploads'], file.filename)
+        file.save(file_path)
+        img_array = preproces_image(file_path)
+        predictions = sequ_model.predict(img_array)
+        prediction = np.argmax(predictions, axis=1)
+
+
+        return render_template('lab6.html', title="Свёрт сеть", menu=menu,
+                               class_model=f"Одёжа:  {classes[prediction[0]]}")
+
+@app.route("/api/dia", methods=['GET'])
+def neuron_api():
+
+    X_new = np.array([float(request.form['list1']),
+                           float(request.form['list2']),
+                           float(request.form['list3']),
+                           float(request.form['list4']),
+                           float(request.form['list5']),
+                           float(request.form['list6']),
+                           float(request.form['list7']),
+                           float(request.form['list8'])])
+    y_pred_class = load_clothes.predict(X_new)
+
+    return jsonify(msg=(y_pred_class >= 0.5, 'Диабет есть', 'Диабета нет'))
+
+
 
 @app.route('/api', methods=['get'])
 def get_sort():

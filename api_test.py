@@ -40,3 +40,16 @@ res = requests.get('http://127.0.0.1:5000/api/wine', params={
     'list13': 1,
 })
 print(res.json())
+
+res = requests.get('http://127.0.0.1:5000/api/dia', params={
+    "list1": 0,
+    "list2": 28.8,
+    "list3": 0,
+    "list4": 0,
+    "list5": 4,
+    "list6": 27.32,
+    "list7": 5.7,
+    "list8": 158,
+})
+response = requests.get('http://127.0.0.1:5000/api/dia')
+print(response.text)

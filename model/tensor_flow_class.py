@@ -4,6 +4,8 @@ from sklearn.model_selection import train_test_split
 import tensorflow as tf
 
 import numpy as np
+import keras
+from keras import ops
 
 diadet_df=pd.read_csv("diabetes_prediction_dataset.csv")
 
